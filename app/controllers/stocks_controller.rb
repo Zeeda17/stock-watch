@@ -10,7 +10,7 @@ class StocksController < ApplicationController
   def index
     @stocks = Stock.all
 
-    @stockInfo = getAutoComplete
+    @stockInfo = getStockAutoComplete(@search_input, @region_input)
   end
 
   # GET /stocks/1 or /stocks/1.json
