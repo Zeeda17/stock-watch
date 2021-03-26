@@ -9,8 +9,8 @@ class UpdateStockTableWithGraphInfo < ActiveRecord::Migration[6.1]
     add_column :stocks, :gmtoffset, :integer
     add_column :stocks, :timezone, :string
     add_column :stocks, :exchangeTimezoneName, :string
-    add_column :stocks, :regularMarketPrice, :real
-    add_column :stocks, :chartPreviousClose, :real
+    add_column :stocks, :regularMarketPrice, :decimal
+    add_column :stocks, :chartPreviousClose, :decimal
 
     add_index :stocks, [:symbol, :exchangeName], unique: true
   end

@@ -4,10 +4,10 @@ class CreateStockPrices < ActiveRecord::Migration[6.1]
       t.string :symbol
       t.string :exchangeName
       t.integer :date
-      t.real :open
-      t.real :close
-      t.real :high
-      t.real :low
+      t.decimal :open
+      t.decimal :close
+      t.decimal :high
+      t.decimal :low
       t.integer :volume
 
       t.belongs_to :stock

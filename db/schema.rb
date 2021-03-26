@@ -18,12 +18,12 @@ ActiveRecord::Schema.define(version: 2021_03_26_173304) do
   create_table "stock_prices", force: :cascade do |t|
     t.string "symbol"
     t.string "exchangeName"
-    t.string "date"
-    t.string "open"
-    t.string "close"
-    t.string "high"
-    t.string "low"
-    t.string "volume"
+    t.integer "date"
+    t.decimal "open"
+    t.decimal "close"
+    t.decimal "high"
+    t.decimal "low"
+    t.integer "volume"
     t.bigint "stock_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 2021_03_26_173304) do
     t.integer "gmtoffset"
     t.string "timezone"
     t.string "exchangeTimezoneName"
-    t.float "regularMarketPrice"
-    t.float "chartPreviousClose"
+    t.decimal "regularMarketPrice"
+    t.decimal "chartPreviousClose"
     t.index ["symbol", "exchangeName"], name: "index_stocks_on_symbol_and_exchangeName", unique: true
   end
 
