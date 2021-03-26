@@ -9,6 +9,11 @@ class StocksController < ApplicationController
   # GET /stocks or /stocks.json
   def index
     @stocks = Stock.all
+    # binding.pry
+    if !params[:stock].nil?
+      @stock = Stock.new(stock_params)  
+    end
+    
 
     @stockInfo = getStockAutoComplete(@search_input, @region_input)
   end
@@ -22,7 +27,7 @@ class StocksController < ApplicationController
 
   # GET /stocks/new
   def new
-    @stock = Stock.new
+    @stock = Stock.new(stock_params)
   end
 
   # GET /stocks/1/edit
@@ -31,8 +36,8 @@ class StocksController < ApplicationController
 
   # POST /stocks or /stocks.json
   def create
+    # binding.pry
     @stock = Stock.new(stock_params)
-
     respond_to do |format|
       if @stock.save
         format.html { redirect_to @stock, notice: "Stock was successfully created." }
@@ -74,6 +79,8 @@ class StocksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stock_params
-      params.require(:stock).permit(:name)
+      # binding.pry
+      params.permit(:name)
+      # params.require(:stock).permit(:name)
     end
 end
