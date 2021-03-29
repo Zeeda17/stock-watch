@@ -19,11 +19,35 @@
   </div>
   <div class="field">
     <%= form.label :region %>
-    <%= form.text_field :region %>
+    <%= form.select(:region, options_for_select([
+      'US',
+      'BR',
+      'AU',
+      'CA',
+      'FR',
+      'DE',
+      'HK',
+      'IN',
+      'IT',
+      'ES',
+      'GB',
+      'SG'
+      ])) %>
   </div>
   <div class="field">
     <%= form.label :range %>
-    <%= form.text_field :range %>
+    <%= form.select(:range, options_for_select([
+      ['1 day', '1d'],
+      ['5 day', '5d'],
+      ['1 month', '1mo'],
+      ['3 months', '3mo'],
+      ['6 months', '6mo'],
+      ['1 year', '1y'],
+      ['2 years', '2y'],
+      ['5 years', '5y'],
+      ['10 years', '10y'],
+      ['year to date', 'ytd'],
+      ['max', 'max']])) %>
   </div>
 
   <div class="actions">

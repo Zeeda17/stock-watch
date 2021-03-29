@@ -41,44 +41,49 @@ class StocksController < ApplicationController
 
     
     @stock = Stock.new(stock_params)
-    # put api out-reach here
-    # getStockAutoComplete(@search_input, @region_input, @range_input)
     # binding.pry
-    test1 = @stock
-    apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
-    #dont run this if we didn't do an API call
-    if (apiReturn)
-      saveReturnedStockData(apiReturn) # rename this. currently only formats data
-      # formatReturnedStockPriceData(apiReturn)
-    end
 
-    respond_to do |format|
-      # binding.pry
-      if @stock.save
-        format.html { redirect_to @stock, notice: "Stock was successfully created." }
-        format.json { render :show, status: :created, location: @stock }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @stock.errors, status: :unprocessable_entity }
+    # check if stock is in DB already
+    foundStock = Stock.find_by(symbol: params[:symbol].upcase)
+    if !foundStock.nil?
+      redirect_to foundStock
+    else
+      apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
+      binding.pry
+      #dont run this if we didn't do an API call
+      if (apiReturn)
+        saveReturnedStockData(apiReturn) # rename this. currently only formats data
+        # formatReturnedStockPriceData(apiReturn)
       end
-    end
 
-    if (apiReturn)
-      i = 0
-      
-      # binding.pry
-      while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do #
-        @stock_price = StockPrice.new
-        formatReturnedStockPriceData(apiReturn,i)
-        @stock_price.save
+      respond_to do |format|
+        # binding.pry
+        if @stock.save
+          format.html { redirect_to @stock, notice: "Stock was successfully created." }
+          format.json { render :show, status: :created, location: @stock }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @stock.errors, status: :unprocessable_entity }
+        end
+      end
 
-        # respond_to do |format|
-        #   if !@stock_price.save
-        #     format.html { render :new, status: :unprocessable_entity }
-        #     format.json { render json: @stock.errors, status: :unprocessable_entity }
-        #   end
-        # end
-        i+=1
+      if (apiReturn)
+        i = 0
+        
+        # binding.pry
+        while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do #
+          @stock_price = StockPrice.new
+          formatReturnedStockPriceData(apiReturn,i)
+          @stock_price.save
+
+          # respond_to do |format|
+          #   if !@stock_price.save
+          #     format.html { render :new, status: :unprocessable_entity }
+          #     format.json { render json: @stock.errors, status: :unprocessable_entity }
+          #   end
+          # end
+          i+=1
+        end
       end
     end
     
