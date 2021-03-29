@@ -35,25 +35,21 @@ class StocksController < ApplicationController
   end
 
   # POST /stocks or /stocks.json
-  def create
-    # search_params()
-    # @search = search_params()
-
-    
+  def create    
     @stock = Stock.new(stock_params)
-    # binding.pry
-
+    
     # check if stock is in DB already
     foundStock = Stock.find_by(symbol: params[:symbol].upcase)
+
+
     if !foundStock.nil?
       redirect_to foundStock
     else
       apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
-      binding.pry
+
       #dont run this if we didn't do an API call
       if (apiReturn)
         saveReturnedStockData(apiReturn) # rename this. currently only formats data
-        # formatReturnedStockPriceData(apiReturn)
       end
 
       respond_to do |format|
@@ -73,6 +69,7 @@ class StocksController < ApplicationController
         # binding.pry
         while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do #
           @stock_price = StockPrice.new
+          @stock_price.stock = @stock
           formatReturnedStockPriceData(apiReturn,i)
           @stock_price.save
 

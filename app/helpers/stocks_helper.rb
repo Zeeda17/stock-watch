@@ -23,9 +23,9 @@ module StocksHelper
     }
 
     self.class.base_uri "https://" + host
-
+    binding.pry
     if (validateStockInput(symbol_input))
-      symbol_input.gsub!(/[^a-zA-Z]/, '')
+      symbol_input.gsub!(/\W+/, '')
     end
     
     if (!validateStockInput(symbol_input))
@@ -97,9 +97,11 @@ module StocksHelper
       return apiReturn['error']
     end
     # binding.pry
+    # StockPrice.find_by(Stock.find_by(@stock))
 
-    @stock_price.symbol = apiReturn['result'][0]['meta']['symbol']
-    @stock_price.exchangeName = apiReturn['result'][0]['meta']['exchangeName']
+    @stock_price.symbol = @stock.symbol
+    @stock_price.exchangeName = @stock.exchangeName
+    @stock_price.stock = @stock
     @stock_price.date = apiReturn['result'][0]['timestamp'][i]
     @stock_price.open = apiReturn['result'][0]['indicators']['quote'][0]['open'][i]
     @stock_price.close = apiReturn['result'][0]['indicators']['quote'][0]['close'][i]
@@ -111,7 +113,7 @@ module StocksHelper
 
   def formatInputForAPI(input, allowed_values)
     if (validateStockInput(input))
-      input.gsub!(/[^a-zA-Z]/, '')
+      input.gsub!(/\W+/, '')
     end
 
     if (!validateStockInput(input) || (!allowed_values[:valid].include? input.upcase))
