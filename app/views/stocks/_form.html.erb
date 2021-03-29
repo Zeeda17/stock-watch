@@ -2,7 +2,7 @@
   <% if !stock.nil?%>
     <% if stock.errors.any? %>
       <div id="error_explanation">
-        <h2><%= pluralize(stock.errors.count, "error") %> prohibited this stock from being saved:</h2>
+        <h2><%= pluralize(stock.errors.count, "error") %> Unable to find stock:</h2>
 
         <ul>
           <% stock.errors.each do |error| %>
@@ -14,8 +14,16 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.label :symbol %>
+    <%= form.text_field :symbol %>
+  </div>
+  <div class="field">
+    <%= form.label :region %>
+    <%= form.text_field :region %>
+  </div>
+  <div class="field">
+    <%= form.label :range %>
+    <%= form.text_field :range %>
   </div>
 
   <div class="actions">

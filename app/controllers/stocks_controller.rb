@@ -15,7 +15,7 @@ class StocksController < ApplicationController
     end
     
 
-    @stockInfo = getStockAutoComplete(@search_input, @region_input)
+    # @stockInfo = getStockAutoComplete(@search_input, @region_input, @range_input)
   end
 
   # GET /stocks/1 or /stocks/1.json
@@ -36,9 +36,24 @@ class StocksController < ApplicationController
 
   # POST /stocks or /stocks.json
   def create
-    # binding.pry
+    # search_params()
+    # @search = search_params()
+
+    
     @stock = Stock.new(stock_params)
+    # put api out-reach here
+    # getStockAutoComplete(@search_input, @region_input, @range_input)
+    # binding.pry
+    test1 = @stock
+    apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
+    #dont run this if we didn't do an API call
+    if (apiReturn)
+      saveReturnedStockData(apiReturn) # rename this. currently only formats data
+      # formatReturnedStockPriceData(apiReturn)
+    end
+
     respond_to do |format|
+      # binding.pry
       if @stock.save
         format.html { redirect_to @stock, notice: "Stock was successfully created." }
         format.json { render :show, status: :created, location: @stock }
@@ -47,6 +62,27 @@ class StocksController < ApplicationController
         format.json { render json: @stock.errors, status: :unprocessable_entity }
       end
     end
+
+    if (apiReturn)
+      i = 0
+      
+      # binding.pry
+      while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do #
+        @stock_price = StockPrice.new
+        formatReturnedStockPriceData(apiReturn,i)
+        @stock_price.save
+
+        # respond_to do |format|
+        #   if !@stock_price.save
+        #     format.html { render :new, status: :unprocessable_entity }
+        #     format.json { render json: @stock.errors, status: :unprocessable_entity }
+        #   end
+        # end
+        i+=1
+      end
+    end
+    
+
   end
 
   # PATCH/PUT /stocks/1 or /stocks/1.json
@@ -74,13 +110,19 @@ class StocksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stock
+      # binding.pry
       @stock = Stock.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def stock_params
       # binding.pry
-      params.permit(:name)
+      params.permit(:symbol)
       # params.require(:stock).permit(:name)
+    end
+
+    def search_params
+      params.permit(:symbol, :region, :range)
+      # binding.pry
     end
 end

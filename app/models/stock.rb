@@ -1,3 +1,3 @@
 class Stock < ApplicationRecord
-  validates :name, presence: true
+  validates :symbol, presence: true
 end
