@@ -23,7 +23,7 @@ module StocksHelper
     }
 
     self.class.base_uri "https://" + host
-    binding.pry
+    # binding.pry
     if (validateStockInput(symbol_input))
       symbol_input.gsub!(/\W+/, '')
     end

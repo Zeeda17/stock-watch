@@ -1,9 +1,18 @@
+<% require "date" %>
 <p id="notice"><%= notice %></p>
 
 <p>
   <strong>Symbol:</strong>
   <%= @stock.symbol %>
 </p>
+
+<tbody>
+  <h3>Date</h3>
+  <% @stock_prices.each do |price| %>
+  
+    <td><%= Time.at(price.date).to_datetime %></td><br>
+  <% end %>
+</tbody>
 
 <%= link_to 'Edit', edit_stock_path(@stock) %> |
 <%= link_to 'Back', stocks_path %>

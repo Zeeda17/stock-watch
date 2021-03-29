@@ -8,8 +8,8 @@ class StocksController < ApplicationController
 
   # GET /stocks or /stocks.json
   def index
-    @stocks = Stock.all
-    # binding.pry
+    @stock = Stock.all
+    
     if !params[:stock].nil?
       @stock = Stock.new(stock_params)  
     end
@@ -20,7 +20,9 @@ class StocksController < ApplicationController
 
   # GET /stocks/1 or /stocks/1.json
   def show
-    @stocks = Stock.all
+    @stock = Stock.find(params[:id])
+    @stock_prices = @stock.stock_prices
+    # binding.pry
 
 
   end
