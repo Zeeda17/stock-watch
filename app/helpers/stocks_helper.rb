@@ -44,10 +44,10 @@ module StocksHelper
       "x-rapidapi-host" => host
     }
     body = {
-      "interval" => intervals[:default], # case matters
-      "symbol" => symbol_input,
-      "region" => region_input,
-      "range" => range_input # case matters
+      "interval" => intervals[:default].downcase, # case matters
+      "symbol" => symbol_input.upcase,
+      "region" => region_input.upcase,
+      "range" => range_input.downcase # case matters
     }
 # binding.pry
     #takes base_uri and concats first param to it for API endpoint
@@ -68,15 +68,15 @@ module StocksHelper
       return apiReturn['error']
     end
 
-    @stock.name = apiReturn['result'][0]['meta']['symbol']
-    @stock.currency = apiReturn['result'][0]['meta']['currency']
-    @stock.symbol = apiReturn['result'][0]['meta']['symbol']
-    @stock.exchangeName = apiReturn['result'][0]['meta']['exchangeName']
-    @stock.instrumentType = apiReturn['result'][0]['meta']['instrumentType']
+    @stock.name = apiReturn['result'][0]['meta']['symbol'].upcase
+    @stock.currency = apiReturn['result'][0]['meta']['currency'].upcase
+    @stock.symbol = apiReturn['result'][0]['meta']['symbol'].upcase
+    @stock.exchangeName = apiReturn['result'][0]['meta']['exchangeName'].upcase
+    @stock.instrumentType = apiReturn['result'][0]['meta']['instrumentType'].upcase
     @stock.firstTradeDate = apiReturn['result'][0]['meta']['firstTradeDate']
     @stock.regularMarketTime = apiReturn['result'][0]['meta']['regularMarketTime']
     @stock.gmtoffset = apiReturn['result'][0]['meta']['gmtoffset']
-    @stock.timezone = apiReturn['result'][0]['meta']['timezone']
+    @stock.timezone = apiReturn['result'][0]['meta']['timezone'].upcase
     @stock.exchangeTimezoneName = apiReturn['result'][0]['meta']['exchangeTimezoneName']
     @stock.regularMarketPrice = apiReturn['result'][0]['meta']['regularMarketPrice']
     @stock.chartPreviousClose = apiReturn['result'][0]['meta']['chartPreviousClose']
@@ -99,8 +99,8 @@ module StocksHelper
     # binding.pry
     # StockPrice.find_by(Stock.find_by(@stock))
 
-    @stock_price.symbol = @stock.symbol
-    @stock_price.exchangeName = @stock.exchangeName
+    @stock_price.symbol = @stock.symbol.upcase
+    @stock_price.exchangeName = @stock.exchangeName.upcase
     @stock_price.stock = @stock
     @stock_price.date = apiReturn['result'][0]['timestamp'][i]
     @stock_price.open = apiReturn['result'][0]['indicators']['quote'][0]['open'][i]

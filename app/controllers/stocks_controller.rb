@@ -40,12 +40,54 @@ class StocksController < ApplicationController
   # POST /stocks or /stocks.json
   def create    
     @stock = Stock.new(stock_params)
-    
+    # binding.pry
     # check if stock is in DB already
     foundStock = Stock.find_by(symbol: params[:symbol].upcase)
 
 
     if !foundStock.nil?
+    #   foundStockPrices = foundStock.stock_prices
+    #   timecheck
+
+    #   case params[:range]
+    #   when '1d'
+    #     timecheck = DateTime.now - 1
+    #   when '5d'
+    #     timecheck = DateTime.now - 5
+    #   when '1mo'
+    #     timecheck = DateTime.now << 1
+    #   when '3mo'
+    #     timecheck = DateTime.now << 3
+    #   when '6mo'
+    #     timecheck = DateTime.now << 6
+    #   when '1y'
+    #     timecheck = DateTime.now << 12
+    #   when '2y'
+    #     timecheck = DateTime.now << 24
+    #   when '5y'
+    #     timecheck = DateTime.now << 60
+    #   when '10y'
+    #     timecheck = DateTime.now << 120
+    #   when 'ytd'
+    #     timecheck = DateTime.new(DateTime.now.year)
+    #   when 'max'
+    #     # always hit api for this?
+    #   else
+    #     #5days as a default?
+    #   end
+     
+
+    #   for price in foundStockPrices do
+    #     Time.at(price.date)
+    #     binding.pry
+    #   end
+      @stock = foundStock
+      apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
+
+      if (apiReturn)
+        saveStockPriceData(apiReturn)
+      end
+
       redirect_to foundStock
     else
       apiReturn = getStockAutoComplete(params[:symbol], params[:region], params[:range])
@@ -67,23 +109,7 @@ class StocksController < ApplicationController
       end
 
       if (apiReturn)
-        i = 0
-        
-        # binding.pry
-        while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do #
-          @stock_price = StockPrice.new
-          @stock_price.stock = @stock
-          formatReturnedStockPriceData(apiReturn,i)
-          @stock_price.save
-
-          # respond_to do |format|
-          #   if !@stock_price.save
-          #     format.html { render :new, status: :unprocessable_entity }
-          #     format.json { render json: @stock.errors, status: :unprocessable_entity }
-          #   end
-          # end
-          i+=1
-        end
+        saveStockPriceData(apiReturn)
       end
     end
     
@@ -129,5 +155,21 @@ class StocksController < ApplicationController
     def search_params
       params.permit(:symbol, :region, :range)
       # binding.pry
+    end
+
+    def saveStockPriceData(apiReturn)
+      i = 0
+        
+        while i < apiReturn['chart']['result'][0]['indicators']['quote'][0]['volume'].size do
+          @stock_price = StockPrice.new
+          @stock_price.stock = @stock
+          formatReturnedStockPriceData(apiReturn,i)
+
+          if !StockPrice.find_by(symbol: @stock_price.symbol, date: @stock_price.date)
+            @stock_price.save
+          end
+
+          i+=1
+        end
     end
 end
