@@ -10,8 +10,8 @@ module StocksHelper
     host = Rails.application.credentials.rapidAPI[:host]
 # binding.pry
     regions = {
-      :valid => ['US','BR','AU','CA','FR','DE','HK','IN','IT','ES','GB','SG'],
-      :default => 'US'
+      :valid => ['us','br','au','ca','fr','de','hk','in','it','es','gb','sg'],
+      :default => 'us'
     }
     intervals = {
       :valid => ['1m','2m','5m','15m','60m','1d'], # Valid for API but this app is not build to support these currently
@@ -23,7 +23,7 @@ module StocksHelper
     }
 
     self.class.base_uri "https://" + host
-    # binding.pry
+# binding.pry
     if (validateStockInput(symbol_input))
       symbol_input.gsub!(/\W+/, '')
     end
@@ -44,12 +44,12 @@ module StocksHelper
       "x-rapidapi-host" => host
     }
     body = {
-      "interval" => intervals[:default],
+      "interval" => intervals[:default], # case matters
       "symbol" => symbol_input,
       "region" => region_input,
-      "range" => range_input
+      "range" => range_input # case matters
     }
-
+# binding.pry
     #takes base_uri and concats first param to it for API endpoint
     self.class.get(
       '/stock/v2/get-chart',
@@ -116,9 +116,11 @@ module StocksHelper
       input.gsub!(/\W+/, '')
     end
 
-    if (!validateStockInput(input) || (!allowed_values[:valid].include? input.upcase))
+    if (!validateStockInput(input) || (!allowed_values[:valid].include? input.downcase))
       input = allowed_values[:default]
     end
+
+    return input
   end
 
   # is data good?

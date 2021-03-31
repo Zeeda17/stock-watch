@@ -8,7 +8,8 @@ class StocksController < ApplicationController
 
   # GET /stocks or /stocks.json
   def index
-    @stock = Stock.all
+    @stocks = Stock.all
+    # @stock_prices = StockPrice.all
     
     if !params[:stock].nil?
       @stock = Stock.new(stock_params)  
