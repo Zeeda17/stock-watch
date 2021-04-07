@@ -6,8 +6,8 @@ import Stock from './Stock/Stock'
 const App = () => {
   return (
     <Switch>
-      <Route exact path="/stocks" component={Stocks}/>
-      <Route exact path="/stocks/:exchangeName/:symbol" component={Stock}/>
+      <Route exact path="/" component={Stocks}/>
+      <Route exact path="/stocks/:symbol" component={Stock}/>
     </Switch>
   )
 }
