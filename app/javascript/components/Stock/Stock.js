@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
+import axios from 'axios'
 
 const Stock = () => {
-  return(
-    <div>This is the Stock#show view</div>
-  )
+  const [stock, setStock] = useState()
+  return <div>test</div>
 }
 
 export default Stock
