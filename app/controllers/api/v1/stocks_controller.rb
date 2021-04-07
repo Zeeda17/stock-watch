@@ -8,7 +8,7 @@ module Api
       end
 
       def show
-        stock = Stock.find_by(symbol: params[:symbol])
+        stock = Stock.find_by(symbol: params[:id]) # need to look into why this shows as id
 
         render json: StockSerializer.new(stock, options).serialized_json
       end

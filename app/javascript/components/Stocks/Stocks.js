@@ -16,7 +16,7 @@ useEffect(() => {
   .catch( resp => console.log(resp))
 }, [stocks.length]) // 2nd arg says only re-run effect if this changes
 
-  const grid = stocks.map( item => {
+  const cardGrid = stocks.map( item => {
     return (
       <StockCard 
         key={item.attributes.symbol}
@@ -32,7 +32,7 @@ useEffect(() => {
         <div className="subheader">There are so many more.</div>
       </div>
       <div className="grid">
-        <ul>{grid}</ul>
+        <ul>{cardGrid}</ul>
       </div>
     </div>
   )
